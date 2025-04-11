@@ -21,7 +21,6 @@ const max = 50;
 const totalNumbers = 5;
 let time = 30;
 let numbers;
-let li = ``;
 
 //* INIZIALIZZAZIONE DELLA FUNZIONE PER GENERARE NUMERI CASUALI
 const generateRandomNumbers = (min, max, tot) => {
