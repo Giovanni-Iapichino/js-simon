@@ -8,11 +8,11 @@
 
 //* RECUPERO ELEMENTI DAL DOM
 const formEl = document.getElementById(`answers-form`);
-const inputEl = document.getElementById(`input-group`);
+const inputEl = document.querySelectorAll(`input`);
 const countdownEl = document.getElementById(`countdown`);
 const numberListEl = document.getElementById(`numbers-list`);
 const messageEl = document.getElementById(`message`);
-const instructionEl = document.getElementById(`instruction`);
+const instructionEl = document.getElementById(`instructions`);
 const buttonEl = document.querySelector(`button`);
 
 //* DEFINIZIONE VARIABILI
@@ -23,7 +23,7 @@ let time = 30;
 let numbers;
 let li = ``;
 
-//* INIZIALIZZAZIONE DELLE FUNZIONI
+//* INIZIALIZZAZIONE DELLA FUNZIONE PER GENERARE NUMERI CASUALI
 const generateRandomNumbers = (min, max, tot) => {
   const arrayNumbers = [];
   for (let i = 0; i < tot; i++) {
@@ -33,14 +33,14 @@ const generateRandomNumbers = (min, max, tot) => {
   return arrayNumbers;
 };
 
-//* FUNZIONE PER CREARE LA LISTA DEI NUMERI
+//* ASSEGNAZIONE FUNZIONE
 numbers = generateRandomNumbers(min, max, totalNumbers);
 console.log(numbers);
 
 //* MOSTRO I NUMERI IN PAGINA
 numberListEl.innerText = numbers.join(" ");
 
-//* FUNZIONE PER CREARE GLI INPUT
+//* CREO IL TIMER
 countdownEl.innerText = time;
 
 const timer = setInterval(() => {
@@ -57,3 +57,39 @@ const timer = setInterval(() => {
       "Inserisci i numeri che ricordi (in qualsiasi ordine)";
   }
 }, 1000);
+
+//* FUNZIONE PER VALIDARE I NUMERI INSERITI
+formEl.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const userNumbers = [];
+  let error = false;
+  messageEl.innerText = "";
+
+  for (let i = 0; i < inputEl.length; i++) {
+    inputEl[i].classList.remove("is-invalid");
+    const val = parseInt(inputEl[i].value);
+
+    if (isNaN(val) || val < min || val > max || userNumbers.includes(val)) {
+      inputEl[i].classList.add("is-invalid");
+      error = true;
+    } else {
+      userNumbers.push(val);
+    }
+  }
+
+  if (error) {
+    messageEl.classList.add("text-danger");
+    messageEl.classList.remove("text-success");
+    messageEl.innerText = "Inserisci solo numeri validi (1-50) e non ripetuti.";
+    return;
+  }
+
+  //* MOSTRO I NUMERI CORRETTI
+  const found = userNumbers.filter((num) => numbers.includes(num));
+  messageEl.classList.remove("text-danger");
+  messageEl.classList.add("text-success");
+  messageEl.innerText = `Hai indovinato ${found.length} numero/i: ${found.join(
+    ", "
+  )}`;
+});
