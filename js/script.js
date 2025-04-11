@@ -17,7 +17,7 @@ const buttonEl = document.querySelector(`button`);
 
 //* DEFINIZIONE VARIABILI
 const min = 1;
-const max = 99;
+const max = 50;
 const totalNumbers = 5;
 let time = 30;
 let numbers;
@@ -25,10 +25,35 @@ let li = ``;
 
 //* INIZIALIZZAZIONE DELLE FUNZIONI
 const generateRandomNumbers = (min, max, tot) => {
-  numbers = [];
+  const arrayNumbers = [];
   for (let i = 0; i < tot; i++) {
     let randomNumbers = Math.floor(Math.random() * (max - min + 1)) + min;
-    numbers.push(randomNumbers);
+    arrayNumbers.push(randomNumbers);
   }
-  return numbers;
+  return arrayNumbers;
 };
+
+//* FUNZIONE PER CREARE LA LISTA DEI NUMERI
+numbers = generateRandomNumbers(min, max, totalNumbers);
+console.log(numbers);
+
+//* MOSTRO I NUMERI IN PAGINA
+numberListEl.innerText = numbers.join(" ");
+
+//* FUNZIONE PER CREARE GLI INPUT
+countdownEl.innerText = time;
+
+const timer = setInterval(() => {
+  time--;
+  countdownEl.innerText = time;
+
+  if (time === 0) {
+    clearInterval(timer);
+
+    //* NASCONDO I NUMERI E MOSTRO IL FORM
+    numberListEl.classList.add("d-none");
+    formEl.classList.remove("d-none");
+    instructionEl.innerText =
+      "Inserisci i numeri che ricordi (in qualsiasi ordine)";
+  }
+}, 1000);
